@@ -253,14 +253,26 @@ go get github.com/ugorji/go@v1.1.2
 ##### 其它
 
 ###### 日志跟踪和监控
-- jaeger:一个是它兼容OpenTracing API,写起来简单方便，一个是UI相较于Zipkin的更加直观和丰富，还有一个则是sdk比较丰富，go语言编写，上传采用的是udp传输，效率高速度快。相比Pinpoint的缺点，当然是UI差距了，基本上现在流行的追踪系统UI上都远远逊于它。
-- Zipkin
+- jaeger(耶格):一个是它兼容OpenTracing API,写起来简单方便，一个是UI相较于Zipkin的更加直观和丰富，还有一个则是sdk比较丰富，go语言编写，上传采用的是udp传输，效率高速度快。相比Pinpoint的缺点，当然是UI差距了，基本上现在流行的追踪系统UI上都远远逊于它。
+- Zipkin(小精灵)
+
+###### 服务监控
+- Prometheus+grafana
+```
+#Prometheus (普罗米修斯)
+docker run -d --network=host -v /var/www/shopping-micro-srv/prometheus.yml:/etc/prometheus/prometheus.yml --name prometheus prom/prometheus
+#访问 宿主机IP:9090
+
+#grafana (格拉法纳)
+docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana 
+#访问 host-ip:3000
+```
 
 ###### 消息队列和分布式事务
 - Rabbitmq
 
 ###### 服务降级和熔断
-- Hystrix
+- Hystrix(好时tree)
 
 ##### 参考文档
 - [Laravel + go-micro + grpc 实践基于 Zipkin 的分布式链路追踪系统](https://mp.weixin.qq.com/s/JkLMNabnYbod-b4syMB3Hw)
@@ -270,3 +282,4 @@ go get github.com/ugorji/go@v1.1.2
 - [使用golang构建高可用微服务-概述](https://www.jianshu.com/p/91786e427939)
 - [go-micro项目实战四 链路追踪](https://blog.csdn.net/u013705066/article/details/89530788)
 - [Go 微服务，第11部分：Hystrix和Resilience](https://cloud.tencent.com/developer/article/1157926)
+- [如何快速部署 Prometheus](https://www.cnblogs.com/CloudMan6/p/7724576.html)

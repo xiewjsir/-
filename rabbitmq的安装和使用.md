@@ -7,7 +7,7 @@
   docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
   
   #访问管理系统，用户/密码：guest/guest
-  http://localhost:15672
+  http://host-ip:15672
   
   #集群安装
   docker network create --driver bridge rabbitmq_net_1
@@ -316,6 +316,9 @@
   ```
 
   ##### 参考文档
+
+  - [官方教程](https://www.rabbitmq.com/getstarted.html)
+
   - [hub.docker.com](https://hub.docker.com/_/rabbitmq?tab=description)
   - [RabbitMQ教程](https://blog.csdn.net/hellozpc/article/details/81436980)
   - [RabbitMQ 发布订阅持久化及持久化方式](https://www.cnblogs.com/jiagoushi/p/8678871.html)
