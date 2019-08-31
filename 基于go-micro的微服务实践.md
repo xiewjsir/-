@@ -107,13 +107,31 @@ go run client.go --registry=consul
 #启动微服务,服务发现使用默认的mdns
 go run ./srv/main.go
 
+#启动网关
+micro api --handler=api --namespace=go.micro.srv  --enable_rpc=true （一定要加这个参数，才能通过/rpc方式调用，手册上没讲明，没带这个参数就直接访问，误导了）
+
+#访问 
+#向micro api发起http请求
+HTTP请求的路径/greeter/say/hello会被路由到服务go.micro.api.greeter的方法Say.Hello上,Say与proto中定义的服务名称一致
+http://localhost:8080/greeter/Say/Hello
+http://localhost:8080/greeter/say/hello?name=sam
+
+#绕开api服务并且直接通过rpc调用,(自测找不到服务 启动API时需加参数 --enable_rpc=true)
+curl -H 'Content-Type: application/json' \
+     -d '{"service": "go.micro.srv.greeter", "method": "Say.Hello", "request": {"name": "John"}}' \
+     http://localhost:8080/rpc
+```
+
+```
 #通过客户端访问微服务
 go run ./cli/main.go
 
 
 #通过micro api 进行HTTP请求，micro在逻辑上将API服务与后端服务分离。
-#运行go.micro.api.greeter API服务
+#运行go.micro.api.greeter API服务，（这个的作用没搞清楚，而且还要专门为API写一个转发脚本，感觉繁琐。
+之前以为一定要这个脚本再能进行HTTP访问。。。）
 go run ./api/api.go
+
 #运行micro api
 micro api --handler=api （micro --registry=consul api --handler=api）
 #通过api访问go.micro.api.greeter,go.micro.api.greeter内部通过相应方法访问go.micro.srv.greeter对应方法
@@ -254,6 +272,18 @@ go get github.com/ugorji/go@v1.1.2
 
 ###### 日志跟踪和监控
 - jaeger(耶格):一个是它兼容OpenTracing API,写起来简单方便，一个是UI相较于Zipkin的更加直观和丰富，还有一个则是sdk比较丰富，go语言编写，上传采用的是udp传输，效率高速度快。相比Pinpoint的缺点，当然是UI差距了，基本上现在流行的追踪系统UI上都远远逊于它。
+```
+docker run -d --name jaeger \
+  -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 \
+  -p 5775:5775/udp \
+  -p 6831:6831/udp \
+  -p 6832:6832/udp \
+  -p 5778:5778 \
+  -p 16686:16686 \
+  -p 14268:14268 \
+  -p 9411:9411 \
+  jaegertracing/all-in-one:latest
+```
 - Zipkin(小精灵)
 
 ###### 服务监控
@@ -279,7 +309,11 @@ docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana
 - [基于Go Micro的微服务架构本地实战](https://www.codercto.com/a/30019.html)
 - [micro微服务框架梳理](https://www.wandouip.com/t5i245217/)
 - [全链路监控Jaeger搭建实战](https://www.jianshu.com/p/ffc597bb4ce8)
+- [jaeger官方安装教程](https://www.jaegertracing.io/docs/1.12/getting-started/)
 - [使用golang构建高可用微服务-概述](https://www.jianshu.com/p/91786e427939)
 - [go-micro项目实战四 链路追踪](https://blog.csdn.net/u013705066/article/details/89530788)
 - [Go 微服务，第11部分：Hystrix和Resilience](https://cloud.tencent.com/developer/article/1157926)
 - [如何快速部署 Prometheus](https://www.cnblogs.com/CloudMan6/p/7724576.html)
+- [go-micro In Action](https://cloud.tencent.com/developer/article/1456489)
+- [Golang微服务开发实践](https://juejin.im/post/5cfa1b5b6fb9a07ecf721696#heading-1)
+- [微服务架构最佳实践](https://juejin.im/post/5cbbe051f265da03973aabcb#heading-24)
