@@ -1,7 +1,5 @@
 # jaeger 使用初探
 
-
-
 #### Jaeger（耶格）组件
 
 - **Agent**
