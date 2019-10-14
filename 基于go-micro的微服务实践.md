@@ -317,3 +317,6 @@ docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana
 - [go-micro In Action](https://cloud.tencent.com/developer/article/1456489)
 - [Golang微服务开发实践](https://juejin.im/post/5cfa1b5b6fb9a07ecf721696#heading-1)
 - [微服务架构最佳实践](https://juejin.im/post/5cbbe051f265da03973aabcb#heading-24)
+- [从零搭建Prometheus监控报警系统](https://www.cnblogs.com/chenqionghe/p/10494868.html)
+- [使用golang编写prometheus metrics exporter](https://yq.aliyun.com/articles/683180)
+- [superbalist/laravel-prometheus-exporter](https://packagist.org/packages/superbalist/laravel-prometheus-exporter)

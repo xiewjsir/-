@@ -51,10 +51,19 @@
   - consumer：消息消费者，就是接受消息的程序。
   - channel：消息通道，在客户端的每个连接里，可建立多个channel，每个channel代表一个会话任务。
   - exchange type：包含四种消息交换机类型：
-      - fanout（复制分发路由）把所有发送到该 exchange的消息路由到所有与它绑定的 queue 中。
-      - direct（直接转发路由）把消息路由到那些binding key与 routing key 完全匹配的 queue 中。
-      - topic（通配路由）将消息路由到binding key 与 routing key 相匹配的 queue 中。
-      - headers 不依赖于 routing key 与 binding key 的匹配规则来路由消息，而是根据发送的消息内容中的 headers 属性进行匹配。
+    - Direct Exchange:直接匹配,通过Exchange名称+RountingKey来发送与接收消息.
+    - Fanout Exchange:广播订阅,向所有的消费者发布消息,但是只有消费者将队列绑定到该路由器才能收到消息,忽略Routing Key.
+    - Topic Exchange：主题匹配订阅,这里的主题指的是RoutingKey,RoutingKey可以采用通配符,如:*或#，RoutingKey命名采用.来分隔多个词,只有消息这将队列绑定到该路由器且指定RoutingKey符合匹配规则时才能收到消息;
+    - Headers Exchange:消息头订阅,消息发布前,为消息定义一个或多个键值对的消息头,然后消费者接收消息同时需要定义类似的键值对请求头:(如:x-mactch=all或者x_match=any)，只有请求头与消息头匹配,才能接收消息,忽略RoutingKey.
+    - 默认的exchange:如果用空字符串去声明一个exchange，那么系统就会使用”amq.direct”这个exchange，我们创建一个queue时,默认的都会有一个和新建queue同名的routingKey绑定到这个默认的exchange上去
+```
+    channel.BasicPublish("", "TaskQueue", properties, bytes);
+```
+  因为在第一个参数选择了默认的exchange，而我们申明的队列叫TaskQueue，所以默认的，它在新建一个也叫TaskQueue的routingKey，并绑定在默认的exchange上，
+  导致了我们可以在第二个参数routingKey中写TaskQueue，这样它就会找到定义的同名的queue，并把消息放进去。
+  如果有两个接收程序都是用了同一个的queue和相同的routingKey去绑定direct exchange的话，分发的行为是负载均衡的，也就是说第一个是程序1收到，第二个是程序2收到，以此类推。
+  如果有两个接收程序用了各自的queue，但使用相同的routingKey去绑定direct exchange的话，分发的行为是复制的，也就是说每个程序都会收到这个消息的副本。行为相当于fanout类型的exchange。
+
 
   ##### 持久化
   RabbitMQ要实现发布订阅持久化，按照消息的传输流程，可以分成三类：
@@ -104,7 +113,7 @@
   为了保证发布订阅的持久化，必须设置Exchange、Queue、Message的持久化，才可以保证消息最终不会丢失
   ##### 应用
   [官方应用教程](https://www.rabbitmq.com/getstarted.html)
-  - 简单模式
+  - 简单模式(只会被一个消费者消费一次)
   ```
   $connection = new AMQPStreamConnection('192.168.1.73', 5672, 'guest', 'guest');
   $channel    = $connection->channel();
@@ -131,8 +140,14 @@
   
   $channel->close();
   $connection->close();
+  
   ```
-  - 任务队列
+  
+  ```
+  php artisan rabbit:hello --act=rec
+  php artisan rabbit:hello --act=send
+  ```
+  - 任务队列(只会被一个消费者消费一次,换而言之：采用“竞争”的方式来争取消息的消费)
   ```
   $connection = new AMQPStreamConnection('192.168.1.73', 5672, 'guest', 'guest');
   $channel    = $connection->channel();
@@ -173,7 +188,12 @@
   $channel->close();
   $connection->close();
   ```
-  - 发布订阅
+  ```
+  php artisan rabbit:work --act=send --msg='test task queue (work)'
+  php artisan rabbit:work --act=rec
+  ```  
+  
+  - 发布订阅(fanout,会被所有绑定到的exchange的队列消费者消费一次？)
   ```
   $connection = new AMQPStreamConnection('192.168.1.73', 5672, 'guest', 'guest');
   $channel    = $connection->channel();
@@ -211,7 +231,12 @@
   $channel->close();
   $connection->close();
   ```
-  - 路由模式
+  ```
+  php artisan rabbit:pubsub --act=send --msg='test pub sub'
+  php artisan rabbit:pubsub --act=rec
+  ``` 
+  
+  - 路由模式(direct)
   ```
   $connection = new AMQPStreamConnection('192.168.1.73', 5672, 'guest', 'guest');
   $channel    = $connection->channel();
@@ -255,17 +280,14 @@
   ```
   ```
   php artisan rabbit:routing --act=rec
-  php artisan rabbit:routing --act=send --severity=error --msg='test pub sub'
+  php artisan rabbit:routing --act=send --severity=error --msg='test routing'
   ```
-  - 主题模式
+  - 主题模式(topic,绑定的消费者都会消费)
   > topic 模式可以理解为主题模式，当 key 包涵某个主题时，即可进入该主题的队列。topic 模式的 key 必须具有固定的格式：以 . 作为间隔的一串单词；比如：quick.orange.rabbit，key 最多不能超过 255byte。
   > 交换机和队列的key可以以类似正则表达式的方式存在，有两种语法
 
-
       - "*" 可以替代一个单词
-      - "#" 可以替代 0 个或多个单词
-
-
+      - "#" 可以替代 0 个或多个单词,亲测代表所有
   ​    
   ```
   $connection = new AMQPStreamConnection('192.168.1.73', 5672, 'guest', 'guest');
@@ -312,8 +334,55 @@
   ```
   ```
   php artisan rabbit:topic --act=rec
-  php artisan rabbit:topic --act=send --routing_key=kern.critical --msg='test pub sub'
+  php artisan rabbit:topic --act=send --routing_key=kern.critical --msg='test topic'
   ```
+
+##### websocket+rabbitmq 需启动相应插件
+```
+#amqp	        ::	5672
+#clustering     ::	25672
+#http	        ::	15672
+#http/web-mqtt	::	15675
+#http/web-stomp	::	15674
+#mqtt	        ::	1883
+#stomp	        ::	61613
+
+rabbitmq-plugins enable rabbitmq_mqtt rabbitmq_web_mqtt rabbitmq_stomp rabbitmq_web_stomp
+```
+
+```
+<html>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>--}}
+
+<script>
+  var ws = new WebSocket('ws://192.168.1.76:15674/ws');
+  var client = Stomp.over(ws);
+
+  var on_connect = function() {
+    var destination='/queue/task_queue';//exchange/task_queue/task_queue
+    var subscription = client.subscribe(destination, callback);
+  };
+
+  var on_error =  function() {
+    console.log('error');
+  };
+  client.connect('admin', 'admin', on_connect, on_error, '/');
+
+  callback = function(message) {
+    // called when the client receives a STOMP message from the server
+    console.log(message)
+  };
+  client.debug = function(str) {
+    // append the debug log to a #debug div somewhere in the page using JQuery:
+    console.log(str)
+  };
+</script>
+
+</html>
+```
 
   ##### 参考文档
 
@@ -321,7 +390,7 @@
 
   - [hub.docker.com](https://hub.docker.com/_/rabbitmq?tab=description)
   - [RabbitMQ教程](https://blog.csdn.net/hellozpc/article/details/81436980)
-  - [RabbitMQ 发布订阅持久化及持久化方式](https://www.cnblogs.com/jiagoushi/p/8678871.html)
+  - [RabbitMQ发布订阅持久化及持久化方式](https://www.cnblogs.com/jiagoushi/p/8678871.html)
   - [RabbitMQ的应用场景以及基本原理介绍](https://blog.csdn.net/whoamiyang/article/details/54954780)
   - [RabbitMQ发布订阅实战-实现延时重试队列](https://www.cnblogs.com/itrena/p/9044097.html)
   - [RabbitMQ系列（五）使用Docker部署RabbitMQ集群](https://www.cnblogs.com/vipstone/p/9362388.html)
