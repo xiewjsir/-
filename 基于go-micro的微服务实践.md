@@ -320,3 +320,5 @@ docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana
 - [从零搭建Prometheus监控报警系统](https://www.cnblogs.com/chenqionghe/p/10494868.html)
 - [使用golang编写prometheus metrics exporter](https://yq.aliyun.com/articles/683180)
 - [superbalist/laravel-prometheus-exporter](https://packagist.org/packages/superbalist/laravel-prometheus-exporter)
+- [浅谈架构是为了什么](https://github.com/CrazyCodes/Blog/blob/master/浅谈架构是为了什么%20(下).md)
+- [微服务架构下分布式事务解决方案——阿里GTS](https://www.cnblogs.com/jiangyu666/p/8522547.html)

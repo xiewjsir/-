@@ -33,8 +33,31 @@ return [
 composer require monolog/monolog
 ```
 
+##### 问题
+- max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+```
+#切换到root用户
+#执行命令：
+sysctl -w vm.max_map_count=262144
+
+#查看结果：
+sysctl -a|grep vm.max_map_count
+
+#显示：
+vm.max_map_count = 262144 
+
+#上述方法修改之后，如果重启虚拟机将失效，所以：
+#解决办法：在/etc/sysctl.conf文件最后添加一行
+
+vm.max_map_count=262144
+
+#即可永久修改
+```
+
 ##### 参考文档
 - [elasticsearch/elasticsearch](https://packagist.org/packages/elasticsearch/elasticsearch)
 - [为 Laravel 适配 ElasticSearch 日志驱动 ***](https://my.oschina.net/zobeen/blog/2250157)
 - [Kibana（一张图片胜过千万行日志）](https://www.cnblogs.com/cjsblog/p/9476813.html)
 - [Elasticsearch-PHP 中文文档](https://learnku.com/docs/elasticsearch-php/6.0)
+- [elasticsearch启动时遇到的错误](https://www.cnblogs.com/yidiandhappy/p/7714489.html)
+- [Elasticsearch-PHP 中文文档](https://learnku.com/index.php/docs/elasticsearch-php/6.0/search-operations/2009)
