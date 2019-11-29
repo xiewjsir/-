@@ -1209,7 +1209,7 @@ RLock() 和 RUnlock()
 
 - RLock() 加读锁，RUnlock() 解读锁
 - RLock() 加读锁时，如果存在写锁，则无法加读锁；当只有读锁或者没有锁时，可以加读锁，读锁可以加载多个
-- RUnlock() 解读锁，RUnlock() 撤销单词 RLock() 调用，对于其他同时存在的读锁则没有效果
+- RUnlock() 解读锁，RUnlock() 撤销单次 RLock() 调用，对于其他同时存在的读锁则没有效果
 - 在没有读锁的情况下调用 RUnlock() 会导致 panic 错误
 - RUnlock() 的个数不得多余 RLock()，否则会导致 panic 错误
 - 读锁占用的情况会阻止写，不会阻止读，多个goroutine可以同时获取读锁
