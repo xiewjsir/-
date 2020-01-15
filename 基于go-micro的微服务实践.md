@@ -1,3 +1,5 @@
+> 建议先看官方文档
+
 ##### 安装指南
 - golang
 [安装包下载](https://golang.google.cn/dl/)
@@ -6,6 +8,10 @@
 cd /tmp
 wget -c https://dl.google.com/go/go1.12.5.linux-amd64.tar.gz
 tar -C /usr/local -xzf go1.12.5.linux-amd64.tar.gz
+
+#升级 
+sudo rm -rf /usr/local/go
+tar -C /usr/local -xzf /var/container/go1.13.5.linux-amd64.tar.gz
 
 #添加环境变理
 vim ~/.bash_profile
@@ -65,6 +71,7 @@ consul agent -dev -ui -client='0.0.0.0'
 http://{{ipaddress}}:8500
 
 go run main.go --registry=consul  #现默认为mdns
+#20200107 新版需引入 _ "github.com/micro/go-plugins/registry/consul" 否则无法用consul
 ```
 - 测试
 [官方示例](https://micro.mu/docs/go-micro.html#run-service)
@@ -106,17 +113,20 @@ go run client.go --registry=consul
 ```
 #启动微服务,服务发现使用默认的mdns
 go run ./srv/main.go
+#go run main.go --registry=consul --registry_address=192.168.1.76:8500
 
 #启动网关
 micro api --handler=api --namespace=go.micro.srv  --enable_rpc=true （一定要加这个参数，才能通过/rpc方式调用，手册上没讲明，没带这个参数就直接访问，误导了）
+#micro --registry=consul --registry_address=192.168.1.76:8500  api --handler=api --namespace=go.micro.srv  --enable_rpc=true
 
 #访问 
 #向micro api发起http请求
 HTTP请求的路径/greeter/say/hello会被路由到服务go.micro.api.greeter的方法Say.Hello上,Say与proto中定义的服务名称一致
+go run api.go --registry=consul --registry_address=192.168.1.76:8500
 http://localhost:8080/greeter/Say/Hello
 http://localhost:8080/greeter/say/hello?name=sam
 
-#绕开api服务并且直接通过rpc调用,(自测找不到服务 启动API时需加参数 --enable_rpc=true)
+#绕过 micro web、micro api 等 直接访问servcies,(自测找不到服务 启动API时需加参数 --enable_rpc=true)
 curl -H 'Content-Type: application/json' \
      -d '{"service": "go.micro.srv.greeter", "method": "Say.Hello", "request": {"name": "John"}}' \
      http://localhost:8080/rpc
@@ -127,13 +137,18 @@ curl -H 'Content-Type: application/json' \
 go run ./cli/main.go
 
 
+三层的服务架构：
+- micro api: (localhost:8080) - http访问入口
+- api service: (go.micro.api.greeter) - 对外暴露的API服务
+- backend service: (go.micro.srv.greeter) - 内网的后台服务
+
 #通过micro api 进行HTTP请求，micro在逻辑上将API服务与后端服务分离。
 #运行go.micro.api.greeter API服务，（这个的作用没搞清楚，而且还要专门为API写一个转发脚本，感觉繁琐。
 之前以为一定要这个脚本再能进行HTTP访问。。。）
 go run ./api/api.go
 
 #运行micro api
-micro api --handler=api （micro --registry=consul api --handler=api）
+micro api --handler=api （micro --registry=consul --registry_address=192.168.1.76:8500 api --handler=api）
 #通过api访问go.micro.api.greeter,go.micro.api.greeter内部通过相应方法访问go.micro.srv.greeter对应方法
 curl http://localhost:8080/greeter/say/hello?name=John
 
@@ -267,6 +282,8 @@ go get github.com/ugorji/go@v1.1.2
 ```
  touch *
 ```
+- 错误3 
+报 too many colons in address错误 ，不支持IPV6,禁用IPV6即可
 
 ##### 其它
 
@@ -305,6 +322,8 @@ docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana
 - Hystrix(好时tree)
 
 ##### 参考文档
+- [官方中文文档](https://micro.mu/docs/cn/go-micro.html)
+- [官方中文文档](https://micro.mu/docs/cn/)
 - [Laravel + go-micro + grpc 实践基于 Zipkin 的分布式链路追踪系统](https://mp.weixin.qq.com/s/JkLMNabnYbod-b4syMB3Hw)
 - [基于Go Micro的微服务架构本地实战](https://www.codercto.com/a/30019.html)
 - [micro微服务框架梳理](https://www.wandouip.com/t5i245217/)

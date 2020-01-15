@@ -1,4 +1,5 @@
 # jaeger 使用初探
+> 链路追踪工具
 
 #### Jaeger（耶格）组件
 
@@ -59,6 +60,7 @@ docker run   -d  --name jaeger-agent --restart=always --net go-micro-net -p 5775
 #### 参考文档
 
 - [jaeger 使用初探](https://www.cnblogs.com/chopper-poet/p/10743141.html)
+- [OpenTracing:开放式分布式追踪规范](https://www.jianshu.com/p/d2b11c079af0)
 - [使用elasticsearch作为存储引擎部署jaeger](https://my.oschina.net/u/2548090/blog/1821372)
 - [Opentracing官方文档](https://github.com/opentracing/specification)
 - [OpenTracing语义规范(中文版)](https://segmentfault.com/a/1190000008895129)
