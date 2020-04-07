@@ -156,6 +156,15 @@ s[low:high]	        从切片s的索引位置low到high处所获得的切片，l
 s[low:high:max]	    从切片s的索引位置low到high处所获得的切片，len=high-low，cap=max-low
 len(s)	            切片s的长度，总是<=cap(s)
 cap(s)	            切片s的容量，总是>=len(s)
+
+var var1 [16]byte //array 数组
+var1 = [16]byte{'a','b','a','b','a','b','a','b','a','b','a','b','a','b','a','b'}
+
+var2 := make([]byte,16) //slice 切片
+var2 = []byte("123450")
+uuid.NewV3(var1,"cc")
+fmt.Println(var1)
+fmt.Println(var2)
 ```
 ##### map
 >Go语言中的map(映射、字典)是一种内置的数据结构，它是一个无序的key—value对的集合，比如以身份证号作为唯一键来标识一个人的信息。

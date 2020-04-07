@@ -6,7 +6,7 @@ docker pull emqx/emqx:v3.1.0
 ```
 - 启动 docker 容器
 ```
-docker run -d --name emqx31 -p 1883:1883 -p 8083:8083 -p 8883:8883 -p 8084:8084 -p 18083:18083 emqx/emqx:v3.1.0
+docker run -d --name emqx405 -v /tmp/emqx:/tmp/emqx -p 1883:1883 -p 8083:8083 -p 8883:8883 -p 8084:8084 -p 18083:18083 --network laradock_backend emqx/emqx:v4.0.5
 ```
 - 访问控制台,默认用户名：admin,密码：public
 ```
@@ -73,7 +73,7 @@ public function callback($topic = null, $msg = null)
 ```
 
 - golang
-> [官方手册](https://godoc.org/github.com/eclipse/paho.mqtt.golang#ClientOptions),[源码](https://github.com/eclipse/paho.mqtt.golang)
+> [官方手册](https://godoc.org/github.com/eclipse/paho.mqtt.golang#ClientOptions),[源码](https://github.com/eclipse/paho.mqtt.golang/blob/master/cmd)
 ```
 package main
 
@@ -134,6 +134,17 @@ func main() {
 }
 ```
 
+##### 源码安装
+```
+_build/emqx/rel/emqx/bin/emqx start
+```
+
 ##### 参考文档
 - [使用golang开发mqtt服务压力测试工具](https://www.colabug.com/5646869.html)
 - [How I can check if I lose connection with mqtt broker?](http://cn.voidcc.com/question/p-wrgqqnkn-ua.html)
+- [centos 7 安装Erlang](https://www.cnblogs.com/song-wentao/p/11297966.html)
+- [RabbitMQ的六种工作模式](https://www.cnblogs.com/Jeely/p/10784013.html)
+- [rabbitmq官方的六种工作模式](https://blog.csdn.net/qq_33040219/article/details/82383127)
+- [emq共享分组订阅问题](https://www.jianshu.com/p/d886afb416d3)
+- [EMQ百万级MQTT消息服务(小技巧)](https://my.oschina.net/wenzhenxi/blog/1795750)
+- [那些年用EMQ踩过的坑](https://www.freesion.com/article/135586096/)
