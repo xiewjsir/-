@@ -33,6 +33,38 @@ return [
 composer require monolog/monolog
 ```
 
+- CURL
+```
+#查询
+GET /logstash/_search
+{
+  "query": {
+    "range" : {
+        "time" : {
+           "lt" : "2020-05-06"
+        }
+    }
+  }
+}
+
+#删除
+POST /logstash/_delete_by_query?conflicts=proceed&pretty
+{
+  "query": {
+    "range" : {
+        "time" : {
+           "lte" : "2020-04-29"
+        }
+    }
+  }
+}
+
+#查看所以索引
+get _cat/indices
+
+
+```
+
 ##### 问题
 - max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
 ```

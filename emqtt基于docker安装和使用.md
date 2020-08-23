@@ -8,6 +8,11 @@ docker pull emqx/emqx:v3.1.0
 ```
 docker run -d --name emqx405 -v /tmp/emqx:/tmp/emqx -p 1883:1883 -p 8083:8083 -p 8883:8883 -p 8084:8084 -p 18083:18083 --network laradock_backend emqx/emqx:v4.0.5
 ```
+- 进入容器控制台
+```
+sudo docker exec -it emqx405 /bin/sh
+```
+
 - 访问控制台,默认用户名：admin,密码：public
 ```
 http://ip:18083
@@ -138,6 +143,33 @@ func main() {
 ```
 _build/emqx/rel/emqx/bin/emqx start
 ```
+##### 认证设置
+- 启用emqx_auth_username插件
+```
+vim etc/emqx.conf
+
+allow_anonymous = true #默认开启匿名认证，任何客户端都可以连接mqtt服务器
+
+#改为
+
+allow_anonymous = false #关闭匿名认证
+```
+- 设置账号密码
+```
+vi etc/plugins/emqx_auth_username.conf
+
+auth.user.1.username = admin  
+auth.user.1.password = public  
+auth.user.2.username = perfectlystyle@gmail.com
+auth.user.2.password = 123456  
+auth.user.3.username = name~!@#$%^&*()_+  
+auth.user.3.password = pwsswd~!@#$%^&*()_+  
+```
+
+##### acl访问控制
+```
+
+```
 
 ##### 参考文档
 - [使用golang开发mqtt服务压力测试工具](https://www.colabug.com/5646869.html)
@@ -148,3 +180,4 @@ _build/emqx/rel/emqx/bin/emqx start
 - [emq共享分组订阅问题](https://www.jianshu.com/p/d886afb416d3)
 - [EMQ百万级MQTT消息服务(小技巧)](https://my.oschina.net/wenzhenxi/blog/1795750)
 - [那些年用EMQ踩过的坑](https://www.freesion.com/article/135586096/)
+- [EMQ 认证设置和acl访问控制](https://www.cnblogs.com/xiaoxianxianxian/p/13191345.html)

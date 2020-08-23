@@ -69,3 +69,6 @@ stderr_logfile=/tmp/zhoujy_stderr.log
 stdout_logfile=/tmp/zhoujy_stdout.log 
 #user = zhoujy  
 ```
+
+##### 参考文档
+ - [（Centos7）Supervisor安装部署](https://blog.51cto.com/14033037/2451474?source=dra)
