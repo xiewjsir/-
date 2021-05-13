@@ -309,7 +309,7 @@ func main() {
     }
 }
 ```
-##### 14. slice 和 array 其实是一维数据
+### 14. slice 和 array 其实是一维数据
 看起来 Go 支持多维的 array 和 slice，可以创建数组的数组、切片的切片，但其实并不是。
 对依赖动态计算多维数组值的应用来说，就性能和复杂度而言，用 Go 实现的效果并不理想。
 可以使用原始的一维数组、“独立“ 的切片、“共享底层数组”的切片来创建动态的多维数组。
@@ -421,7 +421,7 @@ func main() {
 }
 ```
 
-##### 17. string 与 byte slice 之间的转换
+### 17. string 与 byte slice 之间的转换
 当进行 string 和 byte slice 相互转换时，参与转换的是拷贝的原始值。这种转换的过程，与其他编程语的强制类型转换操作不同，也和新 slice 与旧 slice 共享底层数组不同。
 
 Go 在 string 与 byte slice 相互转换上优化了两点，避免了额外的内存分配
@@ -701,7 +701,7 @@ func main() {
     fmt.Printf("%#v\n", out)     // main.MyData{One:1, two:""}
 }
 ```
-##### 31. 程序退出时还有 goroutine 在执行
+### 31. 程序退出时还有 goroutine 在执行
 程序默认不等所有 goroutine 都执行完才退出，这点需要特别注意：
 ```
 // 主程序会直接退出
@@ -796,7 +796,7 @@ func doIt(workerID int, ch <-chan interface{}, done <-chan struct{}, wg *sync.Wa
 }
 
 ```
-##### 32. 向无缓冲的 channel 发送数据，只要 receiver 准备好了就会立刻返回
+### 32. 向无缓冲的 channel 发送数据，只要 receiver 准备好了就会立刻返回
 只有在数据被 receiver 处理时，sender 才会阻塞。因运行环境而异，在 sender 发送完数据后，receiver 的 goroutine 可能没有足够的时间处理下一个数据。如：
 ```
 func main() {
@@ -814,7 +814,7 @@ func main() {
 }
 ```
 
-##### 33. 向已关闭的 channel 发送数据会造成 panic
+### 33. 向已关闭的 channel 发送数据会造成 panic
 从已关闭的 channel 接收数据是安全的：
 
 接收状态值 ok 是 false 时表明 channel 中已没有数据可以接收了。类似的，从有缓冲的 channel 中接收数据，缓存的数据获取完再没有数据可取时，状态值也是 false
@@ -912,7 +912,7 @@ func main() {
     time.Sleep(3 * time.Second)
 }
 ```
-##### 35. 若函数 receiver 传参是传值方式，则无法修改参数的原有值
+### 35. 若函数 receiver 传参是传值方式，则无法修改参数的原有值
 方法 receiver 的参数与一般函数的参数类似：如果声明为值，那方法体得到的是一份参数的值拷贝，此时对参数的任何修改都不会对原有值产生影响。
 
 除非 receiver 参数是 map 或 slice 类型的变量，并且是以指针方式更新 map 中的字段、slice 中的元素的，才会更新原有值:
@@ -948,7 +948,7 @@ func main() {
 ```
 #### 中级篇：36-50
 
-##### 36. 关闭 HTTP 的响应体
+### 36. 关闭 HTTP 的响应体
 使用 HTTP 标准库发起请求、获取响应时，即使你不从响应中读取任何数据或响应为空，都需要手动关闭响应体。新手很容易忘记手动关闭，或者写在了错误的位置：
 ```
 // 请求失败造成 panic
@@ -1026,7 +1026,7 @@ _, err = io.Copy(ioutil.Discard, resp.Body) // 手动丢弃读取完毕的数据
 json.NewDecoder(resp.Body).Decode(&data)
 ```
 
-##### 37. 关闭 HTTP 连接
+### 37. 关闭 HTTP 连接
 一些支持 HTTP1.1 或 HTTP1.0 配置了 connection: keep-alive 选项的服务器会保持一段时间的长连接。但标准库 "net/http" 的连接默认只在服务器主动要求关闭时才断开，所以你的程序可能会消耗完 socket 描述符。解决办法有 2 个，请求结束后：
 
 - 直接设置请求变量的 Close 字段值为 true，每次请求结束后就会主动关闭连接。

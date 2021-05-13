@@ -1,0 +1,1 @@
+[快速入门指南](http://apisix.apache.org/zh/docs/apisix/getting-started#%E7%AC%AC%E4%BA%8C%E6%AD%A5:-%E5%9C%A8-APISIX-%E4%B8%AD%E8%AE%BE%E7%BD%AE%E8%B7%AF%E7%94%B1)

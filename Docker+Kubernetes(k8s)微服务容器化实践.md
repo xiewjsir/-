@@ -123,7 +123,6 @@ docker tag openjdk:8-jre   hub.nnkwrik.co/micro-service/openjdk:8-jre
 docker push hub.nnkwrik.com/micro-service/openjdk:8-jre
 ```
 
-TODO
 
 - Docker-compose化后python的消息服务无法使用
 

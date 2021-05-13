@@ -17,6 +17,7 @@ func main()  {
 	const (
 		f,g,h = iota,iota,iota
 	)
+	)
 	fmt.Println(f,g,h)//0 0 0
 
 	const(
@@ -1213,6 +1214,22 @@ func main() {
     - 写锁会阻塞读锁，直到所有写锁都释放
     - 写锁会阻塞写锁
 
+##### string、int、int64互相转换
+```
+// string到int
+int, err := strconv.Atoi(string)
+
+// string到int64
+int64, err := strconv.ParseInt(string, 10, 64)
+
+// int到string
+string := strconv.Itoa(int)
+
+// int64到string
+string := strconv.FormatInt(int64,10)
+```
+
+
 
 ##### 交叉编译
 GnuWin32
@@ -1229,3 +1246,4 @@ GnuWin32
 - [golang select不阻塞吗](https://www.php.cn/be/go/438810.html)
 - [干货 all goroutines are asleep - deadlock 详尽案例分析](https://www.jianshu.com/p/dee30445845b)
 - [go语言中var声明chan、map、指针，注意的情况](https://www.cnblogs.com/MyUniverse/p/11225145.html)
+- [GO语言原本](https://changkun.de/golang/)

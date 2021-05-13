@@ -70,5 +70,22 @@ stdout_logfile=/tmp/zhoujy_stdout.log
 #user = zhoujy  
 ```
 
+#####centos
+```
+yum install -y epel-release
+yum install -y supervisor
+systemctl enable supervisord # 开机自启动
+systemctl start supervisord # 启动supervisord服务
+
+systemctl status supervisord # 查看supervisord服务状态
+ps -ef|grep supervisord # 查看是否存在supervisord进程
+
+
+supervisord -c /etc/supervisord.conf
+
+sudo supervisorctl restart iot-handle:*
+
+```
+
 ##### 参考文档
  - [（Centos7）Supervisor安装部署](https://blog.51cto.com/14033037/2451474?source=dra)

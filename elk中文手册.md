@@ -9,7 +9,7 @@ curl -u elastic:123456  -H "Content-Type:application/json" -XPOST 'http://localh
 
 curl -u elastic:123456  -H "Content-Type:application/json" -XPOST 'http://localhost:9200/_cache/clear' -d '{ "fielddata": "true" }'
 ```
-##### 更改配置
+###### 更改配置
 ```
 curl -u elastic:123456 -XPUT localhost:9200/_cluster/settings -H "Content-Type:application/json" -d '{
   "persistent" : {
@@ -37,7 +37,7 @@ curl -u elastic:123456 -XPOST "localhost:9200/Indexname/_delete_by_query" -H 'Co
       }
     }
   }
-}'
+}
 
 #删除
 POST /logstash/_delete_by_query?conflicts=proceed&pretty
@@ -50,6 +50,8 @@ POST /logstash/_delete_by_query?conflicts=proceed&pretty
     }
   }
 }
+
+#kibana时间字段设置为格式化 date Nanos 否则显示会少8小时
 
 ```
 

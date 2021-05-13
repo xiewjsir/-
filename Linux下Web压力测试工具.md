@@ -326,6 +326,7 @@ Time per request:       89.699 [ms] (mean) (所有并发用户(这里是1000)都
 Time per request:       8.970 [ms] (mean, across all concurrent requests) (单个用户请求一次的平均时间)
 Transfer rate:          736.11 [Kbytes/sec] received 每秒获取的数据长度 (传输速率，单位：KB/s)
 
+网络上消耗的时间的分解：
 Connection Times (ms)
               min  mean[+/-sd] median   max
 Connect:        0    0   0.1      0       0

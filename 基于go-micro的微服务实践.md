@@ -305,6 +305,18 @@ docker run -d --name jaeger \
 
 ###### 服务监控
 - Prometheus+grafana
+    ###### prometheus介绍
+    prometheus是由谷歌研发的一款开源的监控软件，目前已经被云计算本地基金会托管，是继k8s托管的第二个项目。
+    prometheus采集到的监控数据均以metric（指标）形式保存在时序数据库中（TSDB）
+
+    ###### Grafana介绍
+    Grafana是一个跨平台的开源的度量分析和可视化工具，可以通过将采集的数据查询然后可视化的展示，并及时通知。它主要有以下六大特点：
+    - 1、展示方式：快速灵活的客户端图表，面板插件有许多不同方式的可视化指标和日志，官方库中具有丰富的仪表盘插件，比如热图、折线图、图表等多种展示方式；
+    - 2、数据源：Graphite，InfluxDB，OpenTSDB，Prometheus，Elasticsearch，CloudWatch和KairosDB等；
+    - 3、通知提醒：以可视方式定义最重要指标的警报规则，Grafana将不断计算并发送通知，在数据达到阈值时通过Slack、PagerDuty等获得通知；
+    - 4、混合展示：在同一图表中混合使用不同的数据源，可以基于每个查询指定数据源，甚至自定义数据源；
+    - 5、注释：使用来自不同数据源的丰富事件注释图表，将鼠标悬停在事件上会显示完整的事件元数据和标记；
+    - 6、过滤器：Ad-hoc过滤器允许动态创建新的键/值过滤器，这些过滤器会自动应用于使用该数据源的所有查询。
 ```
 #Prometheus (普罗米修斯)
 docker run -d --network=host -v /var/www/shopping-micro-srv/prometheus.yml:/etc/prometheus/prometheus.yml --name prometheus prom/prometheus
@@ -323,7 +335,6 @@ docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana
 
 ##### 参考文档
 - [官方中文文档](https://micro.mu/docs/cn/go-micro.html)
-- [官方中文文档](https://micro.mu/docs/cn/)
 - [Laravel + go-micro + grpc 实践基于 Zipkin 的分布式链路追踪系统](https://mp.weixin.qq.com/s/JkLMNabnYbod-b4syMB3Hw)
 - [基于Go Micro的微服务架构本地实战](https://www.codercto.com/a/30019.html)
 - [micro微服务框架梳理](https://www.wandouip.com/t5i245217/)
@@ -341,3 +352,5 @@ docker run -d -p 3000:3000 --network go-micro-net --name grafana grafana/grafana
 - [superbalist/laravel-prometheus-exporter](https://packagist.org/packages/superbalist/laravel-prometheus-exporter)
 - [浅谈架构是为了什么](https://github.com/CrazyCodes/Blog/blob/master/浅谈架构是为了什么%20(下).md)
 - [微服务架构下分布式事务解决方案——阿里GTS](https://www.cnblogs.com/jiangyu666/p/8522547.html)
+- [Prometheus 介绍](https://www.cnblogs.com/zqj-blog/p/10871033.html)
+- [实例讲解Springboot整合OpenTracing分布式链路追踪系统（Jaeger和Zipkin)](https://www.cnblogs.com/larrydpk/p/12638344.html)

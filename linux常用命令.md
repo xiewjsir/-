@@ -35,6 +35,17 @@ free -mh
 ```
 df -h
 ```
+##### 句柄
+```
+//查看程序可用的句柄数
+//30343为程序pid
+cat /proc/30343/limits
+
+//查看程序已用的句柄数
+lsof -p 30343 | wc -l
+```
+
+
 
 ####参考
 - [Linux centos7 日常运维——使用w查看系统负载、vmstat命令、top命令、sar命令、nload命令](http://www.mamicode.com/info-detail-2282566.html)
