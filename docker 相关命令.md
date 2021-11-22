@@ -35,7 +35,7 @@ docker container prune -f
 
 -安装docker-compose
 ```
-sudo curl -L https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
@@ -102,9 +102,8 @@ ENTRYPOINT cnpm i  && npm run ci  &&  pm2 start google-chrome   --interpreter no
 
 ```
 docker build -t emq-iot .
-docker run -it --name="emq-iot3" -v /var/www/iot/runtime:/app/emq-iot/runtime -v /var/logs/supervisor:/var/log/supervisor -v /var/www/iot/config/pro:/app/emq-iot/config/pro -p 8003:80 -p 4443:443 -p 9503:9508  emq-iot
-
-docker build -t emq-iot:v2 .
+[docker run -it --name="emq-iot" -v /app/emq-iot/runtime:/app/emq-iot/runtime -v /var/log/supervisor:/var/log/supervisor -v /app/emq-iot/config/pro:/app/emq-iot/config/pro -v /app/emq-iot/supervisord.d/:/etc/supervisord.d/ -p 3080:3080 -p 443:443 -p 9508:9508  emq-iot
+]([](`~~_****_~~`))docker build -t emq-iot:v2 .
 
 docker tag emq-iot harbor.smarlife.cn/iot/emq-iot
 
@@ -116,6 +115,18 @@ supervisorctl -c /etc/supervisor/supervisord.conf restart iot-handle:iot-handle_
 
 docker rm $(docker ps -a | grep "Exited" | awk '{print $1 }')    //删除容器
 docker rmi $(docker images | grep "none" | awk '{print $3}')    //删除镜像
+
+```
+
+##### 批量删除Docker中已经停止的容器
+```
+#显示所有的容器，过滤出Exited状态的容器，取出这些容器的ID，
+
+sudo docker ps -a|grep Exited|awk '{print $1}'
+
+#查询所有的容器，过滤出Exited状态的容器，列出容器ID，删除这些容器
+
+sudo docker rm `docker ps -a|grep Exited|awk '{print $1}'`
 
 ```
 

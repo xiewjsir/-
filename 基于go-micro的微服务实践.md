@@ -6,14 +6,14 @@
 ```
 #安装golang
 cd /tmp
-wget -c https://dl.google.com/go/go1.12.5.linux-amd64.tar.gz
+wget -c https://dl.google.com/go/go1.16.4.linux-amd64.tar.gz
 tar -C /usr/local -xzf go1.12.5.linux-amd64.tar.gz
 
 #升级 
 sudo rm -rf /usr/local/go
 tar -C /usr/local -xzf /var/container/go1.13.5.linux-amd64.tar.gz
 
-#添加环境变理
+#添加环境变理 ubuntu  vi ~/.bashrc
 vim ~/.bash_profile
 
 export PATH=$PATH:/usr/local/go/bin:/root/go/bin
@@ -25,12 +25,13 @@ source ~/.bash_profile
 ```
 - go-mirco
 ```
-go get github.com/micro/go-micro
+go get github.com/asim/go-micro/v3
 ```
 - protoc
 ```
 #linux
 sudo yum install autoconf automake libtool curl make g++ unzip
+#ubuntu sudo apt-get install autoconf automake libtool curl make g++ unzip
 git clone https://github.com/protocolbuffers/protobuf.git /tmp/protobuf
 cd /tmp/protobuf
 git submodule update --init --recursive
@@ -42,7 +43,7 @@ make check
 sudo make install
 sudo ldconfig # refresh shared library cache.
 
-go get github.com/golang/protobuf/{proto,protoc-gen-go}
+**go get github.com/golang/protobuf/{proto,protoc-gen-go}**
 go get github.com/micro/protoc-gen-micro
 
 #window10
@@ -50,7 +51,7 @@ https://github.com/protocolbuffers/protobuf/releases/download/v3.9.0/protoc-3.9.
 ```
 - 工具包
 ```
-go get github.com/micro/micro
+go get github.com/asim/go-micro/cmd/protoc-gen-micro/v3
 ```
 
 - Etcd or Consul
