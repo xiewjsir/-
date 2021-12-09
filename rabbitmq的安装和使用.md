@@ -44,16 +44,16 @@
   - broker：简单来说就是消息队列服务器实体。
   - vhost：虚拟主机，一个 broker 里可以开设多个vhost，用作不同用户的权限分离。
   - exchange：消息交换机，它指定消息按什么规则路由到哪个队列。
-    - exchange type：包含四种消息交换机类型：
-      - Direct Exchange:直接匹配,它会把消息路由到那些binding key(Exchange名称)与routing key完全匹配的Queue中.
-      - Fanout Exchange:广播订阅,它会把所有发送到该Exchange的消息路由到所有与它绑定的Queue中,忽略Routing Key.
-      - Topic Exchange：主题匹配订阅,前面讲到direct类型的Exchange路由规则是完全匹配binding key与routing key，
+    - exchange type：包含四种消息调度策略：
+      - Direct Exchange:直接路由,它会把消息路由到那些binding key(Exchange名称)与routing key完全匹配的Queue中.
+      - Fanout Exchange:广播模式,它会把所有发送到该Exchange的消息路由到所有与它绑定的Queue中,忽略Routing Key.
+      - Topic Exchange：通配符模式,前面讲到direct类型的Exchange路由规则是完全匹配binding key与routing key，
       但这种严格的匹配方式在很多情况下不能满足实际业务需求。topic类型的Exchange在匹配规则上进行了扩展，它与direct类型的Exchage相似，
       也是将消息路由到binding key与routing key相匹配的Queue中，但这里的匹配规则有些不同，它约定：
           - routing key为一个句点号“. ”分隔的字符串（我们将被句点号“. ”分隔开的每一段独立的字符串称为一个单词），如“stock.usd.nyse”、“nyse.vmw”、“quick.orange.rabbit”
           - binding key与routing key一样也是句点号“. ”分隔的字符串
           - binding key中可以存在两种特殊字符“*”与“#”，用于做模糊匹配，其中“*”用于匹配一个单词，“#”用于匹配多个单词（可以是零个）
-      - Headers Exchange:消息头订阅,消息发布前,为消息定义一个或多个键值对的消息头,然后消费者接收消息同时需要定义类似的键值对请求头:(如:x-mactch=all或者x_match=any)，只有请求头与消息头匹配,才能接收消息,忽略RoutingKey.该类型的Exchange没有用到过（不过也应该很有用武之地），所以不做过多介绍.
+      - Headers Exchange:键值对模式,消息发布前,为消息定义一个或多个键值对的消息头,然后消费者接收消息同时需要定义类似的键值对请求头:(如:x-mactch=all或者x_match=any)，只有请求头与消息头匹配,才能接收消息,忽略RoutingKey.该类型的Exchange没有用到过（不过也应该很有用武之地），所以不做过多介绍.
       - 默认的exchange:如果用空字符串去声明一个exchange，那么系统就会使用”amq.direct”这个exchange，我们创建一个queue时,默认的都会有一个和新建queue同名的routingKey绑定到这个默认的exchange上去
   - queue：消息队列载体，每个消息都会被投入到一个或多个队列。
   - binding：绑定，它的作用就是把 exchange 和 queue 按照路由规则绑定起来。
